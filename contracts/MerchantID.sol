@@ -9,7 +9,7 @@ contract MerchantID is ERC1155 {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
 
-    // Mapping from token ID to IPFS CID.
+    // Mapping from token ID to Arweave ID.
     mapping(uint256 => string) private _tokenURIs;
 
     // Mapping from token ID to its owner.
@@ -25,27 +25,15 @@ contract MerchantID is ERC1155 {
 
     function mint(
         address to,
-        string memory ipfsHash,
-        uint256 initialXP,
-        uint256 initialCompliants // Assuming you want to mint multiple complaint tokens at once
+        string memory arweaveID
     ) external returns (uint256) {
         _tokenIds.increment();
         uint256 newTokenId = _tokenIds.current();
         _mint(to, newTokenId, 1, "");
-        _tokenURIs[newTokenId] = ipfsHash;
+        _tokenURIs[newTokenId] = arweaveID;
         _tokenOwners[newTokenId] = to;
 
-        // Interact with XP contract to mint XP
-        if (initialXP > 0) {
-            xpContract.mint(to, initialXP);
-        }
-
-        // Interact with Compliant contract to mint complaint tokens
-        for (uint256 i = 0; i < initialCompliants; i++) {
-            compliantContract.mint(to, "Initial Complaint");
-        }
-
-        emit URI(ipfsHash, newTokenId);
+        emit URI(arweaveID, newTokenId);
         return newTokenId;
     }
 
@@ -56,6 +44,18 @@ contract MerchantID is ERC1155 {
         );
         _tokenURIs[tokenId] = newURI;
         emit URI(newURI, tokenId);
+    }
+
+    function updateArweaveID(
+        uint256 tokenId,
+        string memory newArweaveID
+    ) external {
+        require(
+            _tokenOwners[tokenId] == msg.sender,
+            "Not the owner of this token"
+        );
+        _tokenURIs[tokenId] = newArweaveID;
+        emit URI(newArweaveID, tokenId);
     }
 
     function uri(uint256 tokenId) public view override returns (string memory) {

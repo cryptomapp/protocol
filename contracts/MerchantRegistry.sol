@@ -4,36 +4,31 @@ pragma solidity ^0.8.19;
 import "./MerchantID.sol";
 
 contract MerchantRegistry {
-    MerchantID public merchantIDContractAddress;
+    MerchantID public merchantIDContract;
 
     // Mapping of merchant addresses to their token IDs.
     mapping(address => uint256) public merchantIDsRegistry;
 
     // Event emitted every time a new merchant registers.
-    event MerchantRegistered(
+    event NewMerchantRegistered(
         address indexed merchantAddress,
-        uint256 merchantIdAddress,
-        string ipfsHash
+        uint256 merchantId,
+        string arweaveID
     );
 
     constructor(address _merchantIDAddress) {
-        merchantIDContractAddress = MerchantID(_merchantIDAddress);
+        merchantIDContract = MerchantID(_merchantIDAddress);
     }
 
-    function register(string memory ipfsHash) external {
+    function register(string memory arweaveID) external {
         require(
             merchantIDsRegistry[msg.sender] == 0,
             "Merchant already registered"
         );
 
-        uint256 merchantIdAddress = merchantIDContractAddress.mint(
-            msg.sender,
-            ipfsHash,
-            0, // initialXP can be set as 0 for now
-            0 // initialCompliants can be set as 0 for now
-        );
-        merchantIDsRegistry[msg.sender] = merchantIdAddress;
+        uint256 merchantId = merchantIDContract.mint(msg.sender, arweaveID);
+        merchantIDsRegistry[msg.sender] = merchantId;
 
-        emit MerchantRegistered(msg.sender, merchantIdAddress, ipfsHash);
+        emit NewMerchantRegistered(msg.sender, merchantId, arweaveID);
     }
 }
