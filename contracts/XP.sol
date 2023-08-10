@@ -2,16 +2,17 @@
 pragma solidity ^0.8.19;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract XP is ERC20 {
+contract XP is ERC20, Ownable {
     constructor() ERC20("Merchant XP", "XP") {}
 
-    function mint(address account, uint256 amount) public {
+    function mint(address account, uint256 amount) public onlyOwner {
         _mint(account, amount);
     }
 
-    function burn(uint256 amount) public {
-        _burn(msg.sender, amount);
+    function burn(address account, uint256 amount) public onlyOwner {
+        _burn(account, amount);
     }
 
     // Prevent transfers by overriding the transfer function

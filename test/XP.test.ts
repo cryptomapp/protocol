@@ -15,17 +15,30 @@ describe("XP Contract", function () {
   });
 
   describe("Minting", function () {
-    it("Should mint XP tokens", async function () {
+    it("Should mint XP tokens by owner", async function () {
       await xp.mint(addr1.address, 100);
       expect(await xp.balanceOf(addr1.address)).to.equal(100);
+    });
+
+    it("Should fail minting XP tokens by non-owner", async function () {
+      await expect(
+        xp.connect(addr1).mint(addr1.address, 100)
+      ).to.be.revertedWith("Ownable: caller is not the owner");
     });
   });
 
   describe("Burning", function () {
-    it("Should burn XP tokens", async function () {
+    it("Should burn XP tokens by owner", async function () {
       await xp.mint(addr1.address, 100);
-      await xp.connect(addr1).burn(50);
+      await xp.burn(addr1.address, 50);
       expect(await xp.balanceOf(addr1.address)).to.equal(50);
+    });
+
+    it("Should fail burning XP tokens by non-owner", async function () {
+      await xp.mint(addr1.address, 100);
+      await expect(
+        xp.connect(addr1).burn(addr1.address, 50)
+      ).to.be.revertedWith("Ownable: caller is not the owner");
     });
   });
 });
