@@ -56,17 +56,17 @@ describe("Merchant Contracts", function () {
   describe("MerchantRegistry", function () {
     it("Should allow merchant registration and emit event", async function () {
       const arweaveID = "arweave-id-example-123";
-      await expect(merchantRegistry.register(arweaveID))
+      await expect(merchantRegistry.register(addr1.address, arweaveID))
         .to.emit(merchantRegistry, "NewMerchantRegistered")
-        .withArgs(owner.address, 1, arweaveID);
+        .withArgs(addr1.address, 1, arweaveID);
     });
 
     it("Should prevent duplicate merchant registration", async function () {
       const arweaveID = "arweave-id-example-123";
-      await merchantRegistry.register(arweaveID);
-      await expect(merchantRegistry.register(arweaveID)).to.be.revertedWith(
-        "Merchant already registered"
-      );
+      await merchantRegistry.register(addr1.address, arweaveID);
+      await expect(
+        merchantRegistry.register(addr1.address, arweaveID)
+      ).to.be.revertedWith("Merchant already registered");
     });
   });
 });

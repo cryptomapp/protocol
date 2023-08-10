@@ -10,7 +10,7 @@ const PRIVATE_KEY = process.env.BUILDBEAR_PRIVATE_KEY || "";
 
 const config: HardhatUserConfig = {
   solidity: "0.8.19",
-  defaultNetwork: "buildbear",
+  defaultNetwork: "hardhat",
   networks: {
     hardhat: {},
     buildbear: {

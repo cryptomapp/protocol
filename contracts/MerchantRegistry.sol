@@ -20,15 +20,21 @@ contract MerchantRegistry {
         merchantIDContract = MerchantID(_merchantIDAddress);
     }
 
-    function register(string memory arweaveID) external {
+    function register(
+        address merchantAddress,
+        string memory arweaveID
+    ) external {
         require(
-            merchantIDsRegistry[msg.sender] == 0,
+            merchantIDsRegistry[merchantAddress] == 0,
             "Merchant already registered"
         );
 
-        uint256 merchantId = merchantIDContract.mint(msg.sender, arweaveID);
-        merchantIDsRegistry[msg.sender] = merchantId;
+        uint256 merchantId = merchantIDContract.mint(
+            merchantAddress,
+            arweaveID
+        );
+        merchantIDsRegistry[merchantAddress] = merchantId;
 
-        emit NewMerchantRegistered(msg.sender, merchantId, arweaveID);
+        emit NewMerchantRegistered(merchantAddress, merchantId, arweaveID);
     }
 }
