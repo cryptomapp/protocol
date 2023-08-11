@@ -2,8 +2,9 @@
 pragma solidity ^0.8.19;
 
 import "./MerchantID.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract MerchantRegistry {
+contract MerchantRegistry is Ownable {
     MerchantID public merchantIDContract;
 
     // Mapping of merchant addresses to their token IDs.

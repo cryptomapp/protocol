@@ -13,9 +13,13 @@ contract Compliant is ERC721Enumerable {
         bool resolved;
     }
 
+    // Mapping from merchant address to number of unresolved complaints
+    mapping(address => uint256) private _unresolvedComplaints;
+
     mapping(uint256 => CompliantData) private _compliantData;
 
     event NewComplaint(uint256 merchantID, address owner, string description);
+    event SuspiciousMerchant(address merchantAddress);
 
     constructor() ERC721("Merchant Compliant", "COMPLIANT") {}
 
@@ -28,7 +32,14 @@ contract Compliant is ERC721Enumerable {
         _mint(to, newCompliantId);
         _compliantData[newCompliantId] = CompliantData(description, false);
 
+        _unresolvedComplaints[to] += 1;
+
         emit NewComplaint(newCompliantId, to, description);
+
+        // Check if there are 3 unresolved complaints for the merchant and emit an event if true
+        if (_unresolvedComplaints[to] == 3) {
+            emit SuspiciousMerchant(to);
+        }
 
         return newCompliantId;
     }
@@ -39,11 +50,19 @@ contract Compliant is ERC721Enumerable {
             "Not the owner of this compliant"
         );
         _compliantData[compliantId].resolved = true;
+
+        _unresolvedComplaints[msg.sender] -= 1;
     }
 
     function getCompliant(
         uint256 compliantId
     ) public view returns (CompliantData memory) {
         return _compliantData[compliantId];
+    }
+
+    function getUnresolvedComplaints(
+        address merchantAddress
+    ) public view returns (uint256) {
+        return _unresolvedComplaints[merchantAddress];
     }
 }

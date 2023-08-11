@@ -31,13 +31,16 @@
 //       }
 
 //       const log = receipt.logs.find(
-//         (log) => log.topics[0] === eventFragment.name
+//         (log) => log.topics && log.topics[0] === eventFragment.signature
 //       );
 //       if (!log) {
 //         throw new Error("NewComplaint event not found in logs");
 //       }
 
-//       const parsedLog = compliant.interface.parseLog(log);
+//       const parsedLog = compliant.interface.parseLog({
+//         topics: log.topics,
+//         data: log.data,
+//       });
 //       const tokenId = parsedLog?.args?.merchantID;
 
 //       expect(await compliant.ownerOf(tokenId)).to.equal(addr1.address);
@@ -53,9 +56,12 @@
 
 //       const eventFragment = compliant.interface.getEvent("NewComplaint");
 //       const log = receipt?.logs.find(
-//         (log) => log.topics[0] === eventFragment.name
+//         (log) => log.topics && log.topics[0] === eventFragment.signature
 //       );
-//       const parsedLog = compliant.interface.parseLog(log);
+//       const parsedLog = compliant.interface.parseLog({
+//         topics: log.topics,
+//         data: log.data,
+//       });
 //       const tokenId = parsedLog?.args?.merchantID;
 
 //       await compliant.connect(addr1).resolveCompliant(tokenId);
@@ -70,9 +76,12 @@
 
 //       const eventFragment = compliant.interface.getEvent("NewComplaint");
 //       const log = receipt?.logs.find(
-//         (log) => log.topics[0] === eventFragment.name
+//         (log) => log.topics && log.topics[0] === eventFragment.signature
 //       );
-//       const parsedLog = compliant.interface.parseLog(log);
+//       const parsedLog = compliant.interface.parseLog({
+//         topics: log.topics,
+//         data: log.data,
+//       });
 //       const tokenId = parsedLog?.args?.merchantID;
 
 //       await expect(
