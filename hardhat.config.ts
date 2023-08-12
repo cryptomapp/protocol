@@ -18,6 +18,23 @@ const config: HardhatUserConfig = {
       accounts: PRIVATE_KEY ? [PRIVATE_KEY] : [],
     },
   },
+  etherscan: {
+    apiKey: {
+      buildbear: "verifyContract",
+    },
+    customChains: [
+      {
+        network: "buildbear",
+        chainId: 10366,
+        urls: {
+          apiURL:
+            "https://rpc.buildbear.io/verify/etherscan/past-raymus-antilles-a33a62e5",
+          browserURL:
+            "https://explorer.buildbear.io/past-raymus-antilles-a33a62e5",
+        },
+      },
+    ],
+  },
 };
 
 export default config;

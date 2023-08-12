@@ -17,8 +17,8 @@ async function main() {
 
   const MerchantIDFactory = await ethers.getContractFactory("MerchantID");
   const merchantID = await MerchantIDFactory.deploy(
-    xp.getAddress(),
-    compliant.getAddress()
+    await xp.getAddress(),
+    await compliant.getAddress()
   );
   await merchantID.waitForDeployment();
   console.log(
@@ -30,12 +30,24 @@ async function main() {
     "MerchantRegistry"
   );
   const merchantRegistry = await MerchantRegistryFactory.deploy(
-    merchantID.getAddress()
+    await merchantID.getAddress()
   );
   await merchantRegistry.waitForDeployment();
   console.log(
     "MerchantRegistry contract deployed to:",
     await merchantRegistry.getAddress()
+  );
+
+  const TransactionRegistryFactory = await ethers.getContractFactory(
+    "TransactionRegistry"
+  );
+  const transactionRegistry = await TransactionRegistryFactory.deploy(
+    await merchantRegistry.getAddress()
+  );
+  await transactionRegistry.waitForDeployment();
+  console.log(
+    "TransactionRegistry contract deployed to:",
+    await transactionRegistry.getAddress()
   );
 }
 
