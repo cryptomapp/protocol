@@ -38,4 +38,12 @@ contract MerchantRegistry is Ownable {
 
         emit NewMerchantRegistered(merchantAddress, merchantId, arweaveID);
     }
+
+    // Function to retrieve the merchantID of a given merchantAddress.
+    // return 0 if not registered.
+    function getMerchantID(
+        address merchantAddress
+    ) public view returns (uint256) {
+        return merchantIDsRegistry[merchantAddress];
+    }
 }
